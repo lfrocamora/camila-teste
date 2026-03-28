@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Auditoria 360° — Camila Boletti · Moove Out</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#090d1a;--navy2:#0e1628;--navy3:#141e33;
+  --cyan:#06a2d2;--cyan2:#3bbeef;--pink:#ee7885;
+  --yellow:#FFB830;--teal:#66c0be;--white:#ffffff;
+  --muted:rgba(255,255,255,0.42);--border:rgba(255,255,255,0.07);
+  --card:#0e1628;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--navy);color:var(--white);font-family:'Inter',sans-serif;line-height:1.6;}
+
+/* ── NAV ── */
+.nav-fixed{
+  position:sticky;top:0;z-index:200;
+  background:rgba(9,13,26,0.97);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  max-width:1140px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  height:58px;padding:0 28px;
+}
+.nav-logo svg{height:28px;width:auto;display:block;}
+.nav-links{display:flex;gap:4px;}
+.nav-links a{
+  color:var(--muted);text-decoration:none;
+  font-size:12px;font-weight:600;
+  padding:6px 14px;border-radius:20px;
+  border:1px solid transparent;
+  transition:all .18s;letter-spacing:.02em;
+}
+.nav-links a:hover,.nav-links a.active{
+  color:var(--white);border-color:var(--border);
+  background:var(--navy3);
+}
+
+/* ── CONTAINER ── */
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px;}
+
+/* ── HEADER HERO ── */
+.hero-header{
+  background:linear-gradient(160deg,#0d1730 0%,var(--navy) 60%);
+  border-bottom:1px solid var(--border);
+  padding:52px 28px 48px;
+}
+.hh-inner{max-width:1140px;margin:0 auto;}
+
+.prospect-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+  margin-bottom:44px;
+}
+.prospect-info{}
+.prospect-name{
+  font-family:'Montserrat',sans-serif;
+  font-size:28px;font-weight:900;
+  letter-spacing:-.02em;line-height:1.1;
+  margin-bottom:6px;
+}
+.prospect-meta{
+  display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;
+}
+.meta-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 11px;border-radius:20px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  font-size:11px;font-weight:500;color:var(--muted);
+}
+.prospect-logo svg{height:38px;width:auto;opacity:.95;}
+
+/* score geral */
+.score-hero{text-align:center;margin-bottom:44px;}
+.score-num{
+  font-family:'Montserrat',sans-serif;
+  font-size:108px;font-weight:900;line-height:1;
+  background:linear-gradient(135deg,var(--cyan) 0%,var(--cyan2) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.score-sub{
+  display:block;color:var(--muted);
+  font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  margin-top:6px;
+}
+.maturity-badge{
+  display:inline-block;margin-top:14px;
+  padding:7px 24px;border-radius:24px;
+  font-size:13px;font-weight:700;
+}
+.mb-warn{background:rgba(255,184,48,.1);color:var(--yellow);border:1px solid rgba(255,184,48,.28);}
+.mb-great{background:rgba(102,192,190,.1);color:var(--teal);border:1px solid rgba(102,192,190,.28);}
+.mb-crit{background:rgba(238,120,133,.1);color:var(--pink);border:1px solid rgba(238,120,133,.28);}
+
+/* pillars grid */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.pillar{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:24px;text-align:center;
+}
+.pillar-icon{font-size:26px;margin-bottom:8px;}
+.pillar-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;}
+.pillar-score{font-family:'Montserrat',sans-serif;font-size:44px;font-weight:900;line-height:1;margin-bottom:12px;}
+.pillar-bar{height:5px;background:rgba(255,255,255,.07);border-radius:5px;overflow:hidden;margin-bottom:10px;}
+.pillar-fill{height:100%;border-radius:5px;}
+.pillar-status{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+
+/* color utils */
+.c-great{color:var(--teal);}
+.c-warn{color:var(--yellow);}
+.c-crit{color:var(--pink);}
+.c-cyan{color:var(--cyan2);}
+
+/* ── SECTION ── */
+.audit-section{padding:60px 28px;border-bottom:1px solid var(--border);}
+.section-header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:16px;margin-bottom:32px;
+}
+.sh-left{display:flex;align-items:center;gap:14px;}
+.sh-icon{font-size:30px;}
+.sh-title{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:800;}
+.sh-sub{color:var(--muted);font-size:12px;margin-top:2px;}
+.sh-right{text-align:right;flex-shrink:0;}
+.sh-score{font-family:'Montserrat',sans-serif;font-size:48px;font-weight:900;}
+.sh-denom{color:var(--muted);font-size:17px;}
+.section-intro{
+  color:rgba(255,255,255,.68);font-size:13.5px;
+  max-width:720px;line-height:1.72;
+  margin-bottom:32px;
+}
+
+/* divider linha colorida */
+.sec-divider{height:3px;border-radius:3px;margin-bottom:32px;}
+.div-site{background:linear-gradient(90deg,var(--cyan2),transparent);}
+.div-ig{background:linear-gradient(90deg,#e1306c,transparent);}
+.div-ads{background:linear-gradient(90deg,var(--yellow),transparent);}
+.div-prio{background:linear-gradient(90deg,var(--teal),transparent);}
+
+/* subscores */
+.subscores{display:flex;flex-direction:column;gap:10px;margin-bottom:30px;}
+.sr-row{display:flex;align-items:center;gap:12px;}
+.sr-label{font-size:11px;font-weight:700;color:var(--muted);width:180px;flex-shrink:0;text-transform:uppercase;letter-spacing:.05em;}
+.sr-bar{flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:5px;overflow:hidden;}
+.sr-fill{height:100%;border-radius:5px;}
+.sr-val{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;width:30px;text-align:right;}
+
+/* grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.mb20{margin-bottom:20px;}
+.mb28{margin-bottom:28px;}
+.mb32{margin-bottom:32px;}
+.mt8{margin-top:8px;}
+
+/* card base */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:20px 22px;
+}
+.card-title{
+  font-family:'Montserrat',sans-serif;
+  font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:12px;color:rgba(255,255,255,.55);
+}
+
+/* finding card */
+.fc{background:var(--navy3);border-radius:10px;padding:14px 18px;margin-bottom:10px;border-left:3px solid transparent;}
+.fc-great{border-left-color:var(--teal);}
+.fc-warn{border-left-color:var(--yellow);}
+.fc-crit{border-left-color:var(--pink);}
+.fc-head{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.fc-title{font-size:13px;font-weight:700;flex:1;}
+.fc-body{font-size:12px;color:rgba(255,255,255,.68);margin-bottom:6px;line-height:1.55;}
+.fc-action{font-size:12px;color:var(--cyan2);}
+
+/* pill */
+.pill{font-size:10px;font-weight:700;padding:2px 10px;border-radius:10px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}
+.pill-great{background:rgba(102,192,190,.15);color:var(--teal);}
+.pill-warn{background:rgba(255,184,48,.15);color:var(--yellow);}
+.pill-crit{background:rgba(238,120,133,.15);color:var(--pink);}
+
+/* expandable */
+.expandable{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 22px;margin-bottom:18px;}
+.expandable details summary{list-style:none;cursor:pointer;}
+.expandable details summary::-webkit-details-marker{display:none;}
+.exp-toggle{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:10px;padding:5px 14px;
+  background:rgba(6,162,210,.08);
+  border:1px solid rgba(6,162,210,.22);
+  border-radius:20px;color:var(--cyan2);
+  font-size:11px;font-weight:700;
+  transition:background .18s;
+}
+.exp-toggle:hover{background:rgba(6,162,210,.18);}
+.exp-show{display:inline;}
+.exp-hide{display:none;}
+details[open] .exp-show{display:none;}
+details[open] .exp-hide{display:inline;}
+.exp-content{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);}
+
+/* diagnóstico */
+.diag{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px;}
+.diag-title{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;}
+.diag-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;color:rgba(255,255,255,.78);line-height:1.5;}
+.diag-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;margin-top:1px;font-weight:700;}
+.dot-ok{background:rgba(102,192,190,.18);color:var(--teal);}
+.dot-no{background:rgba(238,120,133,.18);color:var(--pink);}
+
+/* format counters */
+.fmt-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+.fmt-icon{font-size:22px;margin-bottom:6px;}
+.fmt-num{font-family:'Montserrat',sans-serif;font-size:34px;font-weight:900;line-height:1;}
+.fmt-label{font-size:10px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.05em;}
+
+/* benchmark table */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl th{text-align:left;padding:8px 12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);font-size:10px;}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;color:rgba(255,255,255,.78);}
+.tbl tr:last-child td{border-bottom:none;}
+.sp{display:inline-block;padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;}
+.sp-ok{background:rgba(102,192,190,.15);color:var(--teal);}
+.sp-par{background:rgba(255,184,48,.15);color:var(--yellow);}
+.sp-no{background:rgba(238,120,133,.15);color:var(--pink);}
+
+/* ── PRIORITIES SECTION ── */
+.prio-section{padding:64px 28px 72px;}
+.prio-intro{color:rgba(255,255,255,.65);font-size:13.5px;max-width:700px;line-height:1.72;margin-bottom:36px;}
+
+.prio-group{margin-bottom:32px;}
+.prio-group-title{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Montserrat',sans-serif;
+  font-size:12px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.1em;
+  margin-bottom:14px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+
+.prio-item{
+  display:flex;align-items:flex-start;gap:16px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:16px 20px;
+  margin-bottom:10px;
+}
+.prio-num{
+  font-family:'Montserrat',sans-serif;
+  font-size:24px;font-weight:900;
+  color:var(--cyan2);line-height:1;
+  flex-shrink:0;width:30px;
+  margin-top:2px;
+}
+.prio-body{}
+.prio-title{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.prio-desc{font-size:12px;color:rgba(255,255,255,.62);line-height:1.6;}
+.prio-tag{font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}
+.pt-site{background:rgba(6,162,210,.12);color:var(--cyan2);border:1px solid rgba(6,162,210,.2);}
+.pt-ig{background:rgba(225,48,108,.1);color:#f07098;border:1px solid rgba(225,48,108,.2);}
+.pt-ads{background:rgba(255,184,48,.1);color:var(--yellow);border:1px solid rgba(255,184,48,.2);}
+
+.p-alta{background:rgba(238,120,133,.15);color:var(--pink);padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;}
+.p-media{background:rgba(255,184,48,.15);color:var(--yellow);padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;}
+.p-baixa{background:rgba(102,192,190,.15);color:var(--teal);padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;}
+
+/* FOOTER */
+footer{
+  padding:40px 28px;text-align:center;
+  border-top:1px solid var(--border);
+  background:var(--navy2);
+}
+.footer-logo svg{height:28px;width:auto;opacity:.7;margin:0 auto 12px;}
+.footer-tagline{color:var(--muted);font-size:12px;margin-bottom:8px;}
+.footer-note{color:rgba(255,255,255,.2);font-size:11px;max-width:580px;margin:0 auto;line-height:1.6;}
+
+/* responsive */
+@media(max-width:680px){
+  .pillars,.g2,.g3,.g4{grid-template-columns:1fr;}
+  .score-num{font-size:80px;}
+  .section-header{flex-direction:column;}
+  .sh-right{text-align:left;}
+  .nav-links a{padding:5px 9px;font-size:11px;}
+  .sr-label{width:110px;}
+  .prospect-bar{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────── NAV ─────────────── -->
+<nav class="nav-fixed">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 825.65 196.54"><defs><style>.cls-1{fill:url(#linear-gradient-2);}.cls-2{fill:url(#Blanco_Negro);mix-blend-mode:multiply;opacity:.37;}.cls-3{fill:#fff;}.cls-4{fill:url(#linear-gradient-4);}.cls-5{fill:url(#radial-gradient);}.cls-6{fill:url(#radial-gradient-3);}.cls-7{fill:url(#linear-gradient-3);}.cls-8{isolation:isolate;}.cls-9{fill:url(#radial-gradient-2);}.cls-10{fill:url(#radial-gradient-4);}.cls-11{fill:url(#linear-gradient);}</style><radialGradient id="radial-gradient" cx="-1420.41" cy="-139.4" fx="-1420.41" fy="-139.4" r="141.42" gradientTransform="translate(1392.72 429.1) rotate(10.5)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#06a2d2"></stop><stop offset="1" stop-color="#175698"></stop></radialGradient><radialGradient id="radial-gradient-2" cx="31.65" cy="60" fx="31.65" fy="60" r="138.74" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#66c0be"></stop><stop offset=".19" stop-color="#69bebc"></stop><stop offset=".36" stop-color="#74b8b7"></stop><stop offset=".52" stop-color="#86aeb0"></stop><stop offset=".68" stop-color="#a0a1a5"></stop><stop offset=".83" stop-color="#c18f97"></stop><stop offset=".98" stop-color="#e87a87"></stop><stop offset="1" stop-color="#ee7885"></stop></radialGradient><linearGradient id="Blanco_Negro" x1="13.41" y1="84" x2="35.37" y2="147.6" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"></stop><stop offset="1" stop-color="#212120"></stop></linearGradient><radialGradient id="radial-gradient-3" cx="-1307.05" cy="-82.98" fx="-1307.05" fy="-82.98" r="143.87" gradientTransform="translate(1392.72 429.1) rotate(10.5)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#06a2d2"></stop><stop offset="1" stop-color="#3bbeef"></stop></radialGradient><radialGradient id="radial-gradient-4" cx="-1323.97" cy="-69.78" fx="-1323.97" fy="-69.78" r="110.19" gradientTransform="translate(1392.72 429.1) rotate(10.5)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ee7885"></stop><stop offset=".56" stop-color="#a29fa4"></stop><stop offset="1" stop-color="#66c0be"></stop></radialGradient><linearGradient id="linear-gradient" x1="512.63" y1="170.47" x2="453.36" y2="241.05" gradientTransform="translate(-378.4 -66.84) rotate(-2.76)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"></stop><stop offset=".44" stop-color="#b3e4f3"></stop><stop offset="1" stop-color="#4bbfe4"></stop></linearGradient><linearGradient id="linear-gradient-2" x1="521.35" y1="161.69" x2="464.93" y2="226.45" gradientTransform="translate(-378.4 -66.84) rotate(-2.76)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff"></stop><stop offset=".43" stop-color="#b3dcf2"></stop><stop offset="1" stop-color="#47abe1"></stop></linearGradient><linearGradient id="linear-gradient-3" x1="126.87" y1="98.42" x2="103.75" y2="128.76" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#66c0be"></stop><stop offset=".44" stop-color="#a2a2a4"></stop><stop offset="1" stop-color="#ee7f84"></stop></linearGradient><linearGradient id="linear-gradient-4" x1="524.51" y1="156.26" x2="502.86" y2="179.42" gradientTransform="translate(-378.4 -66.84) rotate(-2.76)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ee7885"></stop><stop offset=".44" stop-color="#b1989e"></stop><stop offset="1" stop-color="#66c0be"></stop></linearGradient></defs><g class="cls-8"><g id="Camada_2"><g id="Camada_1-2"><path class="cls-5" d="M112.9,192.09c-5.11,1.22-9.89-3.02-9.36-8.25,0-.05.01-.11.02-.16.33-3.24,2.69-5.9,5.85-6.66,35.92-8.65,65.46-42.42,65.66-80.9.23-44.52-36.53-80.81-82.12-81.05-45.59-.24-80.64,35.72-82.97,80.18-1.69,32.26,17.21,41.47,25.58,48.07-9.6-2.12-28.06-1.5-35.24-45.54-.04-1.27-.07-2.55-.06-3.83C.55,41.79,43.06-.27,95.22,0c52.16.27,94.23,42.78,93.95,94.95-.24,45.51-34.64,87.22-76.27,97.14ZM91.75,180.72c-4.33-.8-8.49,2.06-9.29,6.38-.8,4.33,2.06,8.49,6.38,9.29,4.33.8,8.49-2.06,9.29-6.38.8-4.33-2.06-8.49-6.38-9.29Z"></path><path class="cls-9" d="M115.07,166.58c-.55,2.95-3.38,4.9-6.33,4.35-2.95-.55-4.9-3.38-4.35-6.33.55-2.95,3.38-4.9,6.33-4.35,2.95.55,4.9,3.38,4.35,6.33ZM92.97,15.07c-45.59-.24-80.88,35.71-82.97,80.18-.51,10.9.53,20.62,4.69,29.56,1.35,1.58,2.63,2.74,3.63,3.87,11.64,13.25,28.77,12.58,34.21,11.2-22.03-.68-33.5-17.27-32.87-40.72,1-37.74,31.97-68.26,69.72-67.93,17.31.15,33.08,6.67,45.11,17.3,3.6,3.18,2.23,9.2-2.41,10.43-6.51,1.72-14.73,1.43-16.59.87-6.17-1.86-7.8,4.08-3.51,5.73,2.37.91,4.89,1.15,7.24,1.04,1.96-.09,2.48,2.69.61,3.28-3.56,1.13-8.47,2.2-15.23,2.95-8.09.89-7.17,7.44.06,7.24,17.72-.5,32.75-17.94,38.86-21.92,5.69,7.79,10.53,16.73,12.56,26.51-1.08,1.27-10.65,14.79-10.11,23.57.33,5.43,6.54,5.71,6.12-1.86-.21-3.86.38-6.72,1.33-8.84,1-2.22,4.36-1.53,4.43.9.02.76.03,1.52.03,2.29-.12,23.49-12.25,40.07-30.37,51-2.78,1.67-4.25,4.87-3.72,8.07l.03.17c.95,5.73,7.48,8.51,12.32,5.3,22.76-15.08,38.8-40.84,38.94-69.15.23-44.52-36.53-80.81-82.12-81.05Z"></path><path class="cls-2" d="M52.51,139.88c-10.02-.31-17.84-3.91-23.35-9.95h-.02C9.34,120.34.92,99.04.99,82.63c-.46,3.71-.72,7.49-.74,11.32,0,1.28.02,2.56.06,3.83,7.18,44.04,25.64,43.42,35.24,45.54,4.82-2.25,12.02-2.19,16.95-3.44Z"></path><path class="cls-6" d="M102.61,109.4c-14.85,19.39-34.62,33.92-60.29,29.8C17.19,135.16,1.24,110.71,1.01,82.59c-7.02,48.98,23.68,74.31,55.26,76.27,27.69,1.72,50.91-14.22,64.5-33.58-4.43-7.89-13.85-13.2-18.16-15.88Z"></path><path class="cls-10" d="M112.72,116.24c-3.85-3.14-7.7-5.34-10.11-6.84-14.85,19.39-34.62,33.92-60.29,29.8C17.19,135.16,1.24,110.71,1.01,82.59c0,.05-.01.1-.02.15-4.06,44.77,23.81,65.55,51.54,67.03,25.26,1.35,47.67-13.05,60.19-33.53Z"></path><path class="cls-11" d="M123.19,126.78c-8.64-3.12-16.26-8.66-22.58-17.23-1.42-1.92-1.33-4.56.19-6.41,7.1-8.64,27.27-32.98,33.49-38.51,7.59-6.75,23.51-14.67,27.04-11.99,3.53,2.68.53,19.9-3.96,29.51-2.86,6.12-21.62,33.4-28.15,42.7-1.35,1.92-3.82,2.72-6.02,1.93Z"></path><path class="cls-1" d="M161.36,52.67h0s-.02-.02-.03-.03c-.08-.06-.17-.11-.27-.16h0c-3.99-2.15-19.35,5.55-26.77,12.15-6.22,5.53-26.39,29.88-33.49,38.51-1.51,1.84-1.61,4.49-.19,6.41,2,2.71,4.13,5.12,6.39,7.25h0s0,0,0,0c.55.52,1.11,1.02,1.68,1.51.13.11.25.22.38.32.49.41.99.82,1.49,1.2.09.07.19.15.28.22.59.45,1.2.89,1.8,1.31.09.06.18.12.27.18.51.35,1.03.69,1.56,1.01.16.1.31.19.47.29.54.33,1.09.64,1.64.95.08.04.15.09.23.13.63.34,1.26.66,1.9.97.16.08.32.15.48.22.5.23.99.46,1.5.67.18.08.37.16.55.23.65.27,1.3.53,1.96.76.06.02.11.03.17.05h0c2.16.7,4.54-.1,5.86-1.97,6.53-9.3,25.3-36.59,28.15-42.7,4.48-9.59,7.46-26.73,3.99-29.48ZM154.56,80.93c-3.27,5.91-23.69,31.98-30.99,40.69-2.7,3.22-7,1.37-12.39-2.98-3.41-2.75-8.43-8-5.43-11.99,6.72-8.93,25.53-34.35,31.45-40.19,6.14-6.06,18.21-13.24,23.97-13.76,2.03,4.59-1.87,19.67-6.6,28.23Z"></path><path class="cls-7" d="M104.77,98.33l-12.58,11.93c-.84.98-2.42.12-2.05-1.12l2.67-9.09c.22-.76.64-1.44,1.2-1.98l9.74-9.36c.95-.91,2.41-.99,3.45-.2l3.52,2.67-5.95,7.15ZM132.84,119.63l-8.11,15.32c-.72,1.07.53,2.36,1.63,1.68l8.03-5.02c.67-.42,1.21-1,1.59-1.69l6.4-11.89c.62-1.15.31-2.59-.74-3.38l-3.52-2.67-5.28,7.65ZM108.82,124.09l5.98-5.65,9.75-12.85c.5-.67.38-1.61-.29-2.12l-1.61-1.22c-.67-.5-1.61-.38-2.12.29l-9.81,12.92-3.79,7.2c-.63,1.2.9,2.35,1.88,1.43Z"></path><path class="cls-4" d="M144.41,65.81c-4.34.21-7.69,3.9-7.48,8.24.21,4.34,3.9,7.69,8.24,7.48,4.34-.21,7.69-3.9,7.49-8.24-.21-4.34-3.9-7.69-8.24-7.48ZM145.08,79.57c-3.26.16-6.02-2.36-6.18-5.61-.16-3.26,2.36-6.02,5.61-6.18s6.02,2.36,6.18,5.61c.16,3.26-2.36,6.02-5.61,6.18Z"></path><path class="cls-3" d="M287.4,106.49l-.09-38.59-18.93,31.79h-6.71l-18.83-30.96v37.76h-13.96V42.18h12.31l24.07,39.96,23.7-39.96h12.22l.18,64.31h-13.96Z"></path><path class="cls-3" d="M313.02,74.34c0-19.11,14.88-33.26,35.19-33.26s35.19,14.06,35.19,33.26-14.97,33.26-35.19,33.26-35.19-14.15-35.19-33.26ZM368.33,74.34c0-12.22-8.64-20.58-20.12-20.58s-20.12,8.36-20.12,20.58,8.64,20.58,20.12,20.58,20.12-8.36,20.12-20.58Z"></path><path class="cls-3" d="M391.02,74.34c0-19.11,14.88-33.26,35.19-33.26s35.19,14.06,35.19,33.26-14.97,33.26-35.19,33.26-35.19-14.15-35.19-33.26ZM446.33,74.34c0-12.22-8.64-20.58-20.12-20.58s-20.12,8.36-20.12,20.58,8.64,20.58,20.12,20.58,20.12-8.36,20.12-20.58Z"></path><path class="cls-3" d="M532.78,42.18l-27.84,64.31h-14.7l-27.74-64.31h16.08l19.57,45.94,19.84-45.94h14.79Z"></path><path class="cls-3" d="M588.35,94.55v11.94h-49.79V42.18h48.6v11.94h-33.81v13.96h29.86v11.58h-29.86v14.88h35Z"></path><path class="cls-3" d="M623.08,74.34c0-19.11,14.88-33.26,35.19-33.26s35.19,14.06,35.19,33.26-14.97,33.26-35.19,33.26-35.19-14.15-35.19-33.26ZM678.38,74.34c0-12.22-8.64-20.58-20.12-20.58s-20.12,8.36-20.12,20.58,8.64,20.58,20.12,20.58,20.12-8.36,20.12-20.58Z"></path><path class="cls-3" d="M704.57,78.2v-36.01h14.88v35.46c0,12.22,5.33,17.27,14.33,17.27s14.33-5.05,14.33-17.27v-35.46h14.7v36.01c0,18.93-10.84,29.4-29.12,29.4s-29.12-10.47-29.12-29.4Z"></path><path class="cls-3" d="M790.19,54.31h-20.58v-12.13h56.04v12.13h-20.58v52.18h-14.88v-52.18Z"></path><path class="cls-3" d="M247.27,126.58c0,4.87-3.52,7.81-9.35,7.81h-5.54v6.79h-3.2v-22.41h8.74c5.83,0,9.35,2.95,9.35,7.81ZM244.07,126.58c0-3.2-2.15-5.03-6.24-5.03h-5.44v10.05h5.44c4.1,0,6.24-1.83,6.24-5.03Z"></path><path class="cls-3" d="M274.65,138.4v2.79h-16.27v-22.41h15.82v2.79h-12.62v6.88h11.24v2.72h-11.24v7.24h13.06Z"></path><path class="cls-3" d="M301.22,141.18l-4.83-6.88c-.45.03-.93.06-1.41.06h-5.54v6.82h-3.2v-22.41h8.74c5.83,0,9.35,2.95,9.35,7.81,0,3.46-1.79,5.96-4.93,7.08l5.32,7.52h-3.49ZM301.13,126.58c0-3.2-2.15-5.03-6.24-5.03h-5.44v10.09h5.44c4.1,0,6.24-1.86,6.24-5.06Z"></path><path class="cls-3" d="M319.12,121.55v7.81h11.24v2.75h-11.24v9.06h-3.2v-22.41h15.82v2.79h-12.62Z"></path><path class="cls-3" d="M340.57,129.98c0-6.56,5.06-11.46,11.94-11.46s11.88,4.87,11.88,11.46-5.06,11.46-11.88,11.46-11.94-4.9-11.94-11.46ZM361.19,129.98c0-4.96-3.71-8.61-8.68-8.61s-8.74,3.65-8.74,8.61,3.71,8.61,8.74,8.61,8.68-3.65,8.68-8.61Z"></path><path class="cls-3" d="M390.68,141.18l-4.83-6.88c-.45.03-.93.06-1.41.06h-5.54v6.82h-3.2v-22.41h8.74c5.83,0,9.35,2.95,9.35,7.81,0,3.46-1.79,5.96-4.93,7.08l5.32,7.52h-3.49ZM390.58,126.58c0-3.2-2.15-5.03-6.24-5.03h-5.44v10.09h5.44c4.1,0,6.24-1.86,6.24-5.06Z"></path><path class="cls-3" d="M426.15,141.18l-.03-16.33-8.1,13.61h-1.47l-8.1-13.51v16.23h-3.07v-22.41h2.63l9.35,15.75,9.22-15.75h2.63l.03,22.41h-3.07Z"></path><path class="cls-3" d="M456.63,135.58h-11.91l-2.47,5.6h-3.3l10.15-22.41h3.17l10.18,22.41h-3.36l-2.47-5.6ZM455.51,133.02l-4.83-10.98-4.84,10.98h9.67Z"></path><path class="cls-3" d="M491.47,118.77v22.41h-2.63l-13.45-16.71v16.71h-3.2v-22.41h2.63l13.45,16.71v-16.71h3.2Z"></path><path class="cls-3" d="M502.77,129.98c0-6.63,5.06-11.46,11.88-11.46,3.46,0,6.47,1.18,8.52,3.49l-2.08,2.02c-1.73-1.83-3.84-2.66-6.31-2.66-5.06,0-8.81,3.65-8.81,8.61s3.75,8.61,8.81,8.61c2.47,0,4.58-.86,6.31-2.69l2.08,2.02c-2.05,2.31-5.06,3.52-8.55,3.52-6.79,0-11.85-4.84-11.85-11.46Z"></path><path class="cls-3" d="M550.41,138.4v2.79h-16.27v-22.41h15.82v2.79h-12.62v6.88h11.24v2.72h-11.24v7.24h13.06Z"></path><path class="cls-3" d="M577.02,118.77h9.45c7.2,0,12.1,4.55,12.1,11.21s-4.9,11.21-12.1,11.21h-9.45v-22.41ZM586.27,138.4c5.54,0,9.09-3.39,9.09-8.42s-3.55-8.42-9.09-8.42h-6.05v16.84h6.05Z"></path><path class="cls-3" d="M609.87,118.77h3.2v22.41h-3.2v-22.41Z"></path><path class="cls-3" d="M641.72,129.85h3.07v8.74c-2.24,1.89-5.35,2.85-8.48,2.85-6.88,0-11.94-4.84-11.94-11.46s5.06-11.46,12.01-11.46c3.55,0,6.56,1.18,8.61,3.46l-1.99,1.99c-1.86-1.79-3.97-2.59-6.5-2.59-5.19,0-8.93,3.62-8.93,8.61s3.75,8.61,8.9,8.61c1.89,0,3.65-.42,5.25-1.44v-7.3Z"></path><path class="cls-3" d="M657.32,118.77h3.2v22.41h-3.2v-22.41Z"></path><path class="cls-3" d="M678.1,121.55h-7.68v-2.79h18.54v2.79h-7.68v19.63h-3.17v-19.63Z"></path><path class="cls-3" d="M712,135.58h-11.91l-2.47,5.6h-3.3l10.15-22.41h3.17l10.18,22.41h-3.36l-2.47-5.6ZM710.88,133.02l-4.83-10.98-4.84,10.98h9.67Z"></path><path class="cls-3" d="M727.56,118.77h3.2v19.63h12.14v2.79h-15.34v-22.41Z"></path></g></g></g></svg>
+    </div>
+    <div class="nav-links">
+      <a href="#resumo">📊 Resumo</a>
+      <a href="#site">🌐 Site</a>
+      <a href="#instagram">📸 Instagram</a>
+      <a href="#anuncios">📢 Anúncios</a>
+      <a href="#prioridades">🎯 Prioridades</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─────────────── HEADER HERO ─────────────── -->
+<section id="resumo" class="hero-header">
+  <div class="hh-inner">
+
+    <!-- Prospect bar -->
+    <div class="prospect-bar">
+      <div class="prospect-info">
+        <div class="prospect-name">Camila Boletti</div>
+        <div style="color:var(--muted);font-size:13px;margin-top:4px;">Diagnóstico externo 360° · Março 2026</div>
+        <div class="prospect-meta">
+          <span class="meta-tag">🌐 camilaboletti.com.br</span>
+          <span class="meta-tag">📸 @camilaboletti · 119K</span>
+          <span class="meta-tag">👗 Moda Feminina</span>
+          <span class="meta-tag">📍 Uberlândia · MG</span>
+          <span class="meta-tag">⚙️ Plataforma Tray</span>
+        </div>
+      </div>
+</div>
+
+    <!-- Score geral -->
+    <div class="score-hero">
+      <div class="score-num">6.7</div>
+      <span class="score-sub">Score Geral · 3 Pilares Analisados</span>
+      <div><span class="maturity-badge mb-warn">🟡 Em Desenvolvimento</span></div>
+    </div>
+
+    <!-- 3 pilares -->
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">🌐</div>
+        <div class="pillar-name">Site & CRO</div>
+        <div class="pillar-score c-warn">6.4</div>
+        <div class="pillar-bar"><div class="pillar-fill" style="width:64%;background:var(--yellow)"></div></div>
+        <div class="pillar-status c-warn">Adequado</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📸</div>
+        <div class="pillar-name">Instagram</div>
+        <div class="pillar-score c-great">7.2</div>
+        <div class="pillar-bar"><div class="pillar-fill" style="width:72%;background:var(--teal)"></div></div>
+        <div class="pillar-status c-great">Maduro</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📢</div>
+        <div class="pillar-name">Anúncios</div>
+        <div class="pillar-score c-warn">6.4</div>
+        <div class="pillar-bar"><div class="pillar-fill" style="width:64%;background:var(--yellow)"></div></div>
+        <div class="pillar-status c-warn">Em Desenvolvimento</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────── SITE ─────────────── -->
+<section id="site" class="audit-section">
+  <div class="wrap">
+    <div class="sec-divider div-site"></div>
+    <div class="section-header">
+      <div class="sh-left">
+        <span class="sh-icon">🌐</span>
+        <div>
+          <div class="sh-title">Auditoria de Site & CRO</div>
+          <div class="sh-sub">UX, Experiência de Compra e Conversão — Plataforma Tray</div>
+        </div>
+      </div>
+      <div class="sh-right">
+        <span class="sh-score c-warn">6.4</span>
+        <span class="sh-denom"> / 10</span>
+      </div>
+    </div>
+
+    <p class="section-intro">O site da Camila Boletti é funcional com estrutura de catálogo organizada, vitrine de mais vendidos, parcelamento visível e "Compre Junto" ativo na PDP. Os gaps críticos estão na ausência de prova social, pop-up de captura e sistema de reviews — os três maiores bloqueadores de conversão em e-commerce de moda feminina.</p>
+
+    <div class="subscores mb28">
+      <div class="sr-row"><span class="sr-label">Home</span><div class="sr-bar"><div class="sr-fill" style="width:65%;background:var(--yellow)"></div></div><span class="sr-val c-warn">6.5</span></div>
+      <div class="sr-row"><span class="sr-label">Navegação</span><div class="sr-bar"><div class="sr-fill" style="width:70%;background:var(--yellow)"></div></div><span class="sr-val c-warn">7.0</span></div>
+      <div class="sr-row"><span class="sr-label">Página de Produto</span><div class="sr-bar"><div class="sr-fill" style="width:62%;background:var(--yellow)"></div></div><span class="sr-val c-warn">6.2</span></div>
+      <div class="sr-row"><span class="sr-label">Checkout</span><div class="sr-bar"><div class="sr-fill" style="width:55%;background:var(--pink)"></div></div><span class="sr-val c-crit">5.5</span></div>
+    </div>
+
+    <!-- Home findings -->
+    <div class="expandable mb20">
+      <div class="card-title">🏠 Home — Findings Principais</div>
+      <div class="fc fc-great"><div class="fc-head"><span class="fc-title">✅ Barra de benefícios + desconto Pix 5% OFF</span><span class="pill pill-great">Positivo</span></div><div class="fc-body">Vitrine "Mais Vendidos" presente e desconto Pix comunicado — boas práticas de conversão no topo da jornada.</div></div>
+      <div class="fc fc-crit"><div class="fc-head"><span class="fc-title">🚨 Ausência de prova social na home</span><span class="pill pill-crit">Alta</span></div><div class="fc-body">Nenhum depoimento ou feed do Instagram identificado. Prova social é fator decisivo em moda feminina — visitantes sem essa âncora tendem a não converter na primeira visita.</div><div class="fc-action">→ Incluir carrossel de depoimentos ou feed IG logo abaixo da vitrine. App nativo na Tray.</div></div>
+      <div class="fc fc-crit"><div class="fc-head"><span class="fc-title">🚨 Sem pop-up de captura</span><span class="pill pill-crit">Alta</span></div><div class="fc-body">Não há pop-up de e-mail ou WhatsApp. Pop-ups com cupom de boas-vindas são os maiores geradores de lead e primeira compra em e-commerce de moda.</div><div class="fc-action">→ Criar pop-up com cupom CLIENTEBOLETTI para captura de e-mail ou WhatsApp. Recurso nativo Tray.</div></div>
+      <details>
+        <summary class="exp-toggle"><span class="exp-show">Ver mais ↓</span><span class="exp-hide">Recolher ↑</span></summary>
+        <div class="exp-content">
+          <div class="fc fc-warn"><div class="fc-head"><span class="fc-title">⚠️ Banners sem CTA textual claro</span><span class="pill pill-warn">Médio</span></div><div class="fc-body">Os banners levam a categorias e SALE, mas sem chamada de ação visível no próprio criativo. Baymard Institute indica redução de até 47% no click-through em banners sem CTA.</div><div class="fc-action">→ Adicionar texto + botão de CTA em todos os banners principais.</div></div>
+          <div class="fc fc-warn"><div class="fc-head"><span class="fc-title">⚠️ Seção de Lançamentos pouco hierarquizada</span><span class="pill pill-warn">Médio</span></div><div class="fc-body">A vitrine existe mas não tem badge "NOVO" ou diferenciação visual. Em moda, novidades são o principal ativador de recompra.</div><div class="fc-action">→ Adicionar etiqueta "NOVO" nos cards — configurável no painel Tray.</div></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- PDP findings -->
+    <div class="expandable mb20">
+      <div class="card-title">🛍️ Página de Produto — Findings Principais</div>
+      <div class="fc fc-great"><div class="fc-head"><span class="fc-title">✅ 5 fotos por produto + descrição completa</span><span class="pill pill-great">Positivo</span></div><div class="fc-body">5 ângulos de imagem e descrição com material, composição e cuidados — acima da média de moda feminina.</div></div>
+      <div class="fc fc-great"><div class="fc-head"><span class="fc-title">✅ "Compre Junto" com cross-sell ativo</span><span class="pill pill-great">Positivo</span></div><div class="fc-body">Funcionalidade presente com desconto no combo. Aumenta ticket médio diretamente.</div></div>
+      <div class="fc fc-crit"><div class="fc-head"><span class="fc-title">🚨 Nenhum sistema de reviews</span><span class="pill pill-crit">Alta</span></div><div class="fc-body">95% dos compradores verificam avaliações antes da compra (PowerReviews, 2023). Ausência de reviews é um bloqueador direto de conversão.</div><div class="fc-action">→ Implementar Lily Reviews ou similar — app disponível na Tray.</div></div>
+      <details>
+        <summary class="exp-toggle"><span class="exp-show">Ver mais ↓</span><span class="exp-hide">Recolher ↑</span></summary>
+        <div class="exp-content">
+          <div class="fc fc-warn"><div class="fc-head"><span class="fc-title">⚠️ Variações esgotadas sem sinalização confirmada</span><span class="pill pill-warn">Médio</span></div><div class="fc-body">Não foi possível confirmar se tamanhos esgotados são sinalizados visualmente no seletor.</div><div class="fc-action">→ Configurar exibição de esgotado no painel Tray com badge "Indisponível".</div></div>
+          <div class="fc fc-warn"><div class="fc-head"><span class="fc-title">⚠️ Frete grátis progressivo ausente na PDP</span><span class="pill pill-warn">Médio</span></div><div class="fc-body">Se houver regra de frete grátis, ela não está visível na página de produto — oportunidade perdida de aumentar o ticket médio.</div><div class="fc-action">→ Adicionar barra de progresso de frete na PDP via app Tray.</div></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Checkout -->
+    <div class="fc fc-warn mb28">
+      <div class="fc-head"><span class="fc-title">🔒 Checkout — Não avaliável externamente</span><span class="pill pill-warn">❓ Pendente</span></div>
+      <div class="fc-body">Checkout Tray requer produto no carrinho para acesso externo. Pontos a confirmar na reunião: checkout transparente? Campo de cupom visível? Selos de segurança e logos de pagamento exibidos? Score estimado 5.5 com base em boas práticas padrão Tray.</div>
+    </div>
+
+    <!-- Diagnóstico Site -->
+    <div class="g2">
+      <div class="diag">
+        <div class="diag-title" style="color:var(--teal)">✅ Pontos Fortes</div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>Catálogo organizado com vitrine de Mais Vendidos e Lançamentos</div></div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>Desconto Pix e parcelamento em 4x sem juros comunicados</div></div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>"Compre Junto" ativo na PDP — aumenta ticket médio</div></div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>5 fotos por produto com descrição técnica completa</div></div>
+      </div>
+      <div class="diag">
+        <div class="diag-title" style="color:var(--pink)">⚠️ Pontos de Atenção</div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Ausência total de reviews — maior bloqueador de conversão na PDP</div></div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Sem pop-up de captura — perda de leads de visitantes que não convertem</div></div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Sem prova social na home — visitantes novos não têm âncora de confiança</div></div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Banners sem CTA — reduz click-through e eficácia dos destaques</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── INSTAGRAM ─────────────── -->
+<section id="instagram" class="audit-section">
+  <div class="wrap">
+    <div class="sec-divider div-ig"></div>
+    <div class="section-header">
+      <div class="sh-left">
+        <span class="sh-icon">📸</span>
+        <div>
+          <div class="sh-title">Auditoria de Instagram</div>
+          <div class="sh-sub">Atratividade · Engajamento · Conversão — Metodologia Moove Out</div>
+        </div>
+      </div>
+      <div class="sh-right">
+        <span class="sh-score c-great">7.2</span>
+        <span class="sh-denom"> / 10</span>
+      </div>
+    </div>
+
+    <p class="section-intro">O Instagram é o pilar mais sólido da Camila Boletti. Com 119K seguidores, 6.624 posts e identidade visual consistente, o perfil tem autoridade clara no nicho. O gap principal está no pilar de Conversão: Linktree sem estrutura de performance, destaques sem curadoria estratégica e ausência de UGC de clientes.</p>
+
+    <div class="subscores mb28">
+      <div class="sr-row"><span class="sr-label">D1 Identidade</span><div class="sr-bar"><div class="sr-fill" style="width:78%;background:var(--teal)"></div></div><span class="sr-val c-great">7.8</span></div>
+      <div class="sr-row"><span class="sr-label">D2 Link da Bio</span><div class="sr-bar"><div class="sr-fill" style="width:65%;background:var(--yellow)"></div></div><span class="sr-val c-warn">6.5</span></div>
+      <div class="sr-row"><span class="sr-label">D3 Vitrine / Destaques</span><div class="sr-bar"><div class="sr-fill" style="width:62%;background:var(--yellow)"></div></div><span class="sr-val c-warn">6.2</span></div>
+      <div class="sr-row"><span class="sr-label">D4 Feed</span><div class="sr-bar"><div class="sr-fill" style="width:80%;background:var(--teal)"></div></div><span class="sr-val c-great">8.0</span></div>
+      <div class="sr-row"><span class="sr-label">D5 Stories & Reels</span><div class="sr-bar"><div class="sr-fill" style="width:72%;background:var(--teal)"></div></div><span class="sr-val c-great">7.2</span></div>
+      <div class="sr-row"><span class="sr-label">D6 Jornada de Conversão</span><div class="sr-bar"><div class="sr-fill" style="width:60%;background:var(--yellow)"></div></div><span class="sr-val c-warn">6.0</span></div>
+    </div>
+
+    <div class="g2 mb20">
+      <div class="card">
+        <div class="card-title">D1 — Identidade <span style="float:right;color:var(--teal);font-family:'Montserrat',sans-serif;font-weight:900;font-size:17px;">7.8</span></div>
+        <div style="font-size:13px;color:rgba(255,255,255,.72);line-height:1.65;">Bio clara com cupom CLIENTEBOLETTI em destaque. Foto de perfil com logo limpa. CTA na bio poderia incluir "Clique abaixo 👇" para aumentar a taxa de clique no link.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">D2 — Link da Bio <span style="float:right;color:var(--yellow);font-family:'Montserrat',sans-serif;font-weight:900;font-size:17px;">6.5</span></div>
+        <div style="font-size:13px;color:rgba(255,255,255,.72);line-height:1.65;">Linktree com 6 botões e UTMs configurados — boa prática. Falta: Linktree de Performance com cupom em destaque no topo, botão de WhatsApp proeminente e acesso a Looks/Editoriais.</div>
+      </div>
+    </div>
+
+    <div class="expandable mb20">
+      <div class="card-title">D4 — Feed <span style="float:right;color:var(--teal);font-family:'Montserrat',sans-serif;font-weight:900;font-size:17px;">8.0</span></div>
+      <div style="font-size:13px;color:rgba(255,255,255,.72);line-height:1.65;">Com 6.624 posts, a CB tem um dos feeds mais densos do nicho — diferencial de autoridade. Mix equilibrado: produto focal, looks compostos, bastidores, sazonais.</div>
+      <details>
+        <summary class="exp-toggle"><span class="exp-show">Ver análise completa ↓</span><span class="exp-hide">Recolher ↑</span></summary>
+        <div class="exp-content">
+          <div class="fc fc-great"><div class="fc-head"><span class="fc-title">✅ Mix variado — produto, lifestyle, bastidores, sazonais</span></div><div class="fc-body">Cumpre os 3 pilares MO (Atratividade, Engajamento, Conversão) em diferentes momentos do feed.</div></div>
+          <div class="fc fc-warn"><div class="fc-head"><span class="fc-title">⚠️ Instagram Shopping / Sacolinha não confirmado</span></div><div class="fc-body">Se inativo, todos os posts de produto perdem a tag de compra direta — ponto de conversão dentro do feed.</div><div class="fc-action">→ Verificar ativação do Instagram Shopping e tagear produtos nos posts.</div></div>
+          <div class="fc fc-warn"><div class="fc-head"><span class="fc-title">⚠️ Ausência de UGC (clientes usando as peças)</span></div><div class="fc-body">Não há reposts de clientes identificados. UGC é um dos maiores gatilhos de compra em moda feminina.</div><div class="fc-action">→ Criar dinâmica com hashtag #CamilaBoletti e repostar clientes semanalmente.</div></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="expandable mb20">
+      <div class="card-title">D3 — Vitrine / Destaques <span style="float:right;color:var(--yellow);font-family:'Montserrat',sans-serif;font-weight:900;font-size:17px;">6.2</span></div>
+      <div style="font-size:13px;color:rgba(255,255,255,.72);line-height:1.65;">Destaques existem mas sem estrutura de performance: faltam "Mais Vendidos", "Clientes" (prova social) e "SALE CB". Novos visitantes não têm vitrine curada de primeiras impressões.</div>
+      <details>
+        <summary class="exp-toggle"><span class="exp-show">Ver análise completa ↓</span><span class="exp-hide">Recolher ↑</span></summary>
+        <div class="exp-content">
+          <div class="fc fc-crit"><div class="fc-head"><span class="fc-title">🚨 Sem destaque de "Mais Vendidos" ou "Favoritos"</span></div><div class="fc-body">Novos visitantes não têm entrada rápida para os produtos mais populares.</div><div class="fc-action">→ Criar destaque "TOP CB" com os 10 produtos mais vendidos + link de compra.</div></div>
+          <div class="fc fc-warn"><div class="fc-head"><span class="fc-title">⚠️ Sem destaque de depoimentos / clientes</span></div><div class="fc-body">Um destaque "❤️ Clientes" com fotos reais gera confiança imediata para novos visitantes.</div><div class="fc-action">→ Criar destaque "Looks Reais" com reposts de clientes usando as peças.</div></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="g2">
+      <div class="diag">
+        <div class="diag-title" style="color:var(--teal)">✅ Pontos Fortes</div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>119K seguidores — autoridade consolidada em moda feminina</div></div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>Feed denso (6.624 posts) com identidade visual definida</div></div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>Cupom CLIENTEBOLETTI integrado entre bio, Linktree e anúncios</div></div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>UTMs configurados no Linktree — rastreamento ativo por categoria</div></div>
+      </div>
+      <div class="diag">
+        <div class="diag-title" style="color:var(--pink)">⚠️ Pontos de Atenção</div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Linktree sem estrutura de performance — cupom e WhatsApp pouco proeminentes</div></div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Destaques sem vitrine estratégica (Mais Vendidos, Clientes)</div></div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Ausência de UGC no feed e stories</div></div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Instagram Shopping não confirmado ativo</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── ANÚNCIOS ─────────────── -->
+<section id="anuncios" class="audit-section">
+  <div class="wrap">
+    <div class="sec-divider div-ads"></div>
+    <div class="section-header">
+      <div class="sh-left">
+        <span class="sh-icon">📢</span>
+        <div>
+          <div class="sh-title">Auditoria de Anúncios</div>
+          <div class="sh-sub">Facebook Ad Library · ~34 Anúncios Ativos</div>
+        </div>
+      </div>
+      <div class="sh-right">
+        <span class="sh-score c-warn">6.4</span>
+        <span class="sh-denom"> / 10</span>
+      </div>
+    </div>
+
+    <p class="section-intro">A Camila Boletti mantém operação ativa de mídia paga com ~34 criativos simultâneos. O volume é expressivo e o cupom CLIENTEBOLETTI gera consistência de jornada. Os gaps críticos são a ausência total de UGC/provador — o formato de maior conversão no nicho — e o risco de fragmentação de budget com muitos criativos rodando sem processo estruturado de validação.</p>
+
+    <div class="subscores mb28">
+      <div class="sr-row"><span class="sr-label">Volume & Consistência</span><div class="sr-bar"><div class="sr-fill" style="width:75%;background:var(--teal)"></div></div><span class="sr-val c-great">7.5</span></div>
+      <div class="sr-row"><span class="sr-label">Mix de Formatos</span><div class="sr-bar"><div class="sr-fill" style="width:60%;background:var(--yellow)"></div></div><span class="sr-val c-warn">6.0</span></div>
+      <div class="sr-row"><span class="sr-label">Qualidade dos Hooks</span><div class="sr-bar"><div class="sr-fill" style="width:68%;background:var(--yellow)"></div></div><span class="sr-val c-warn">6.8</span></div>
+      <div class="sr-row"><span class="sr-label">Estrutura de Copy</span><div class="sr-bar"><div class="sr-fill" style="width:72%;background:var(--teal)"></div></div><span class="sr-val c-great">7.2</span></div>
+      <div class="sr-row"><span class="sr-label">Ângulos Explorados</span><div class="sr-bar"><div class="sr-fill" style="width:58%;background:var(--yellow)"></div></div><span class="sr-val c-warn">5.8</span></div>
+      <div class="sr-row"><span class="sr-label">Aderência ao Nicho</span><div class="sr-bar"><div class="sr-fill" style="width:60%;background:var(--yellow)"></div></div><span class="sr-val c-warn">6.0</span></div>
+    </div>
+
+    <!-- Contadores -->
+    <div class="card-title mb20">📊 Distribuição por Formato</div>
+    <div class="g4 mb28">
+      <div class="fmt-card"><div class="fmt-icon">🎬</div><div class="fmt-num c-great">22+</div><div class="fmt-label">Vídeo Produto</div><span class="pill pill-great mt8" style="display:inline-block;margin-top:8px;">Adequado</span></div>
+      <div class="fmt-card"><div class="fmt-icon">🖼️</div><div class="fmt-num c-warn">8+</div><div class="fmt-label">Imagem Estática</div><span class="pill pill-warn mt8" style="display:inline-block;margin-top:8px;">Parcial</span></div>
+      <div class="fmt-card"><div class="fmt-icon">🎠</div><div class="fmt-num c-warn">2-4</div><div class="fmt-label">Carrossel</div><span class="pill pill-warn mt8" style="display:inline-block;margin-top:8px;">Subutilizado</span></div>
+      <div class="fmt-card"><div class="fmt-icon">🤳</div><div class="fmt-num c-crit">0</div><div class="fmt-label">UGC / Provador</div><span class="pill pill-crit mt8" style="display:inline-block;margin-top:8px;">Ausente</span></div>
+    </div>
+
+    <!-- Benchmark -->
+    <div class="card mb20">
+      <div class="card-title">🎯 Benchmark do Nicho — Moda Feminina</div>
+      <table class="tbl">
+        <thead><tr><th>Formato Esperado</th><th>Status</th><th>Qtd.</th><th>Observação</th></tr></thead>
+        <tbody>
+          <tr><td>Reels SALE / Oferta com cupom</td><td><span class="sp sp-ok">Presente</span></td><td>8+</td><td>Cupom R$20 OFF bem estruturado</td></tr>
+          <tr><td>Reels Produto (descrição de peça)</td><td><span class="sp sp-ok">Presente</span></td><td>12+</td><td>Ângulos descritivos — bom volume</td></tr>
+          <tr><td>Vídeo Provador / Experimentando</td><td><span class="sp sp-no">Ausente</span></td><td>0</td><td>Principal gap — maior conversão em moda feminina</td></tr>
+          <tr><td>Look Completo / Composição</td><td><span class="sp sp-par">Parcial</span></td><td>4-6</td><td>Existem mas sem foco em "como usar"</td></tr>
+          <tr><td>Prova Social / UGC de cliente</td><td><span class="sp sp-no">Ausente</span></td><td>0</td><td>Nenhum criativo com cliente real</td></tr>
+          <tr><td>Dinâmico com urgência / countdown</td><td><span class="sp sp-no">Ausente</span></td><td>0</td><td>Escassez não explorada — forte conversor em SALE</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Copy Analysis -->
+    <div class="expandable mb20">
+      <div class="card-title">✍️ Análise de Copy e Ângulos</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.72);line-height:1.65;">Copy segue padrão consistente: oferta + benefício de produto + parcelamento. Estrutura funcional. Gap: falta diversidade de ângulos emocionais e urgência.</div>
+      <details>
+        <summary class="exp-toggle"><span class="exp-show">Ver análise completa ↓</span><span class="exp-hide">Recolher ↑</span></summary>
+        <div class="exp-content">
+          <div class="fc fc-great"><div class="fc-head"><span class="fc-title">✅ Cupom CLIENTEBOLETTI como âncora de oferta consistente</span></div><div class="fc-body">Cria consistência entre anúncio, bio e site — bom processo de atribuição.</div></div>
+          <div class="fc fc-great"><div class="fc-head"><span class="fc-title">✅ Copy descritiva de produto com características reais</span></div><div class="fc-body">Comunica tecido, modelagem e versatilidade — cria expectativa realista e reduz devolução.</div></div>
+          <div class="fc fc-crit"><div class="fc-head"><span class="fc-title">🚨 Ausência de ângulo emocional / identitário</span></div><div class="fc-body">Anúncios comunicam produto e oferta, mas não falam de aspiração ou identidade. Em moda feminina, ângulos de autoexpressão têm alto desempenho.</div><div class="fc-action">→ Testar: "Para quem quer se sentir elegante todo dia, sem esforço" + vídeo de look do dia.</div></div>
+          <div class="fc fc-warn"><div class="fc-head"><span class="fc-title">⚠️ Sem urgência ou escassez — especialmente crítico com SALE CB ativa</span></div><div class="fc-body">Nenhum criativo com countdown ou "últimas unidades" — forte oportunidade não explorada.</div><div class="fc-action">→ Criar criativo com urgência: "Sale CB termina em X dias — R$20 OFF agora".</div></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="g2">
+      <div class="diag">
+        <div class="diag-title" style="color:var(--teal)">✅ Pontos Positivos</div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>34+ anúncios ativos — presença consistente de mídia paga</div></div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>Cupom CLIENTEBOLETTI como âncora de oferta em múltiplos criativos</div></div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>Copy descritiva de produto — comunica características reais</div></div>
+        <div class="diag-item"><div class="diag-dot dot-ok">✓</div><div>Renovação recente de criativos (fev/mar 2026) — conta em operação ativa</div></div>
+      </div>
+      <div class="diag">
+        <div class="diag-title" style="color:var(--pink)">⚠️ Pontos de Atenção</div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Zero UGC e vídeos de provador — formato de maior conversão no nicho</div></div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>34 criativos simultâneos sem processo de validação estruturado</div></div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Nenhum ângulo emocional ou identitário na copy</div></div>
+        <div class="diag-item"><div class="diag-dot dot-no">!</div><div>Ausência de urgência / escassez — SALE CB ativa e não aproveitada</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── PRIORIDADES ─────────────── -->
+<section id="prioridades" class="prio-section">
+  <div class="wrap">
+    <div class="sec-divider div-prio"></div>
+    <div class="section-header">
+      <div class="sh-left">
+        <span class="sh-icon">🎯</span>
+        <div>
+          <div class="sh-title">Prioridades de Ajustes</div>
+          <div class="sh-sub">Ações consolidadas dos 3 pilares · Ordenadas por impacto</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="prio-intro">Abaixo estão todas as ações recomendadas reunidas, priorizadas por impacto estimado em conversão e receita. As ações de Alta prioridade devem ser atacadas imediatamente — são as que mais diretamente bloqueiam resultados hoje.</p>
+
+    <!-- Alta -->
+    <div class="prio-group">
+      <div class="prio-group-title">
+        <span class="p-alta">Alta Prioridade</span>
+        <span style="color:var(--muted);font-weight:500;font-size:11px;">Impacto direto e imediato em conversão</span>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">1</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-ads">Anúncios</span> Produção de criativos UGC e vídeo Provador</div>
+          <div class="prio-desc">Criar Reels curtos (15–30s) mostrando a peça sendo experimentada com reação e composição de look. É o formato de maior CTR em moda feminina segundo benchmarks Meta — e está completamente ausente na conta.</div>
+        </div>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">2</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-site">Site</span> Implementar sistema de reviews nas PDPs</div>
+          <div class="prio-desc">95% dos compradores verificam avaliações antes de comprar. App Lily Reviews disponível na Tray — configuração direta no painel. Impacto imediato em taxa de conversão da PDP.</div>
+        </div>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">3</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-site">Site</span> Pop-up de captura com cupom CLIENTEBOLETTI</div>
+          <div class="prio-desc">Criar pop-up de e-mail ou WhatsApp com o cupom já usado nos anúncios. Captura leads de visitantes que não convertem na primeira visita e ativa a base para recompra. Recurso nativo Tray.</div>
+        </div>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">4</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-site">Site</span> Prova social na home (depoimentos ou feed IG)</div>
+          <div class="prio-desc">Adicionar carrossel de depoimentos ou feed do Instagram na home. Visitantes sem âncora de confiança tendem a não converter na primeira visita — especialmente tráfego vindo de anúncio.</div>
+        </div>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">5</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-ads">Anúncios</span> Estruturar processo de validação de criativos</div>
+          <div class="prio-desc">Reduzir de 34 para 10–15 criativos ativos. Budget fixo por criativo nos testes, escalar os vencedores, pausar underperformers. O algoritmo do Meta performa melhor com menos criativos e mais budget concentrado.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Média -->
+    <div class="prio-group">
+      <div class="prio-group-title">
+        <span class="p-media">Média Prioridade</span>
+        <span style="color:var(--muted);font-weight:500;font-size:11px;">Importante · Prazo de 2–4 semanas</span>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">6</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-ig">Instagram</span> Reestruturar Destaques como Vitrine de Performance</div>
+          <div class="prio-desc">Criar: "TOP CB" (mais vendidos), "❤️ Clientes" (UGC/prova social), "SALE CB" (promoções ativas), "Como Usar" (guia de looks). Cada destaque com Stories linkando para a compra.</div>
+        </div>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">7</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-ads">Anúncios</span> Criativos com urgência para a SALE CB</div>
+          <div class="prio-desc">Vídeos com countdown visual ou copy de escassez ("Últimas unidades — SALE CB com 50% OFF") para os produtos em promoção. A SALE está ativa e sem nenhum criativo aproveitando urgência.</div>
+        </div>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">8</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-ig">Instagram</span> Ativar Instagram Shopping e tagear produtos</div>
+          <div class="prio-desc">Ativar catálogo via Facebook Business Manager e tagear produtos nos posts e Reels. Reduz o atrito entre descoberta e compra — o usuário vai direto do post para o site sem precisar ir à bio.</div>
+        </div>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">9</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-site">Site</span> CTA textual nos banners + badge "NOVO" em lançamentos</div>
+          <div class="prio-desc">Adicionar texto e botão de CTA visível nos banners principais. Etiquetar produtos novos com badge "NOVO" no card da vitrine — ambos ativáveis diretamente no painel Tray.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Baixa -->
+    <div class="prio-group">
+      <div class="prio-group-title">
+        <span class="p-baixa">Baixa Prioridade</span>
+        <span style="color:var(--muted);font-weight:500;font-size:11px;">Refinamento · Prazo flexível</span>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">10</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-ads">Anúncios</span> Testar ângulo emocional / identitário na copy</div>
+          <div class="prio-desc">Criar linha de criativos focada em como a mulher SE SENTE usando CB — elegância, confiança, versatilidade. Diferenciação em relação a anúncios puramente transacionais do nicho.</div>
+        </div>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">11</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-ig">Instagram</span> Criar dinâmica de UGC com hashtag #CamilaBoletti</div>
+          <div class="prio-desc">Incentivar clientes a postar com a hashtag via CTA no pacote e no Stories. Repostar semanalmente — gera prova social orgânica e conteúdo gratuito para a conta.</div>
+        </div>
+      </div>
+
+      <div class="prio-item">
+        <div class="prio-num">12</div>
+        <div class="prio-body">
+          <div class="prio-title"><span class="prio-tag pt-site">Site</span> Barra de progresso de frete grátis na PDP</div>
+          <div class="prio-desc">Se houver regra de frete grátis ativa, exibi-la progressivamente na PDP aumenta o ticket médio. App disponível na Tray para implementação sem código.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 825.65 196.54" style="height:26px;width:auto;display:block;margin:0 auto 12px;opacity:.6"><defs><style>.cf{fill:url(#rfg);}.cf2{fill:url(#rfg2);}.cf3{fill:#fff;}.cf4{fill:url(#rfg3);}.cf5{fill:url(#rfg4);}</style><radialGradient id="rfg" cx="-1420.41" cy="-139.4" r="141.42" gradientTransform="translate(1392.72 429.1) rotate(10.5)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#06a2d2"/><stop offset="1" stop-color="#175698"/></radialGradient><radialGradient id="rfg2" cx="31.65" cy="60" r="138.74" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#66c0be"/><stop offset="1" stop-color="#ee7885"/></radialGradient><radialGradient id="rfg3" cx="-1307.05" cy="-82.98" r="143.87" gradientTransform="translate(1392.72 429.1) rotate(10.5)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#06a2d2"/><stop offset="1" stop-color="#3bbeef"/></radialGradient><radialGradient id="rfg4" cx="-1323.97" cy="-69.78" r="110.19" gradientTransform="translate(1392.72 429.1) rotate(10.5)" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ee7885"/><stop offset="1" stop-color="#66c0be"/></radialGradient></defs><g><path class="cf" d="M112.9,192.09c-5.11,1.22-9.89-3.02-9.36-8.25.33-3.24,2.69-5.9,5.85-6.66,35.92-8.65,65.46-42.42,65.66-80.9.23-44.52-36.53-80.81-82.12-81.05-45.59-.24-80.64,35.72-82.97,80.18-1.69,32.26,17.21,41.47,25.58,48.07-9.6-2.12-28.06-1.5-35.24-45.54C.55,41.79,43.06-.27,95.22,0c52.16.27,94.23,42.78,93.95,94.95-.24,45.51-34.64,87.22-76.27,97.14Z"/><path class="cf2" d="M92.97,15.07c-45.59-.24-80.88,35.71-82.97,80.18-.51,10.9.53,20.62,4.69,29.56,11.64,13.25,28.77,12.58,34.21,11.2-22.03-.68-33.5-17.27-32.87-40.72,1-37.74,31.97-68.26,69.72-67.93,17.31.15,33.08,6.67,45.11,17.3,3.6,3.18,2.23,9.2-2.41,10.43-6.51,1.72-14.73,1.43-16.59.87-6.17-1.86-7.8,4.08-3.51,5.73,2.37.91,4.89,1.15,7.24,1.04,1.96-.09,2.48,2.69.61,3.28-3.56,1.13-8.47,2.2-15.23,2.95-8.09.89-7.17,7.44.06,7.24,17.72-.5,32.75-17.94,38.86-21.92,5.69,7.79,10.53,16.73,12.56,26.51-1.08,1.27-10.65,14.79-10.11,23.57.33,5.43,6.54,5.71,6.12-1.86-.21-3.86.38-6.72,1.33-8.84,1-2.22,4.36-1.53,4.43.9.02.76.03,1.52.03,2.29-.12,23.49-12.25,40.07-30.37,51-2.78,1.67-4.25,4.87-3.72,8.07l.03.17c.95,5.73,7.48,8.51,12.32,5.3,22.76-15.08,38.8-40.84,38.94-69.15.23-44.52-36.53-80.81-82.12-81.05Z"/><path class="cf3" d="M287.4,106.49l-.09-38.59-18.93,31.79h-6.71l-18.83-30.96v37.76h-13.96V42.18h12.31l24.07,39.96,23.7-39.96h12.22l.18,64.31h-13.96ZM348.21,41.08c-20.31,0-35.19,14.15-35.19,33.26s14.88,33.26,35.19,33.26,35.19-14.15,35.19-33.26-14.88-33.26-35.19-33.26ZM348.21,94.92c-11.48,0-20.12-8.36-20.12-20.58s8.64-20.58,20.12-20.58,20.12,8.36,20.12,20.58-8.64,20.58-20.12,20.58ZM426.21,41.08c-20.31,0-35.19,14.15-35.19,33.26s14.88,33.26,35.19,33.26,35.19-14.15,35.19-33.26-14.88-33.26-35.19-33.26ZM426.21,94.92c-11.48,0-20.12-8.36-20.12-20.58s8.64-20.58,20.12-20.58,20.12,8.36,20.12,20.58-8.64,20.58-20.12,20.58ZM532.78,42.18l-27.84,64.31h-14.7l-27.74-64.31h16.08l19.57,45.94,19.84-45.94h14.79ZM588.35,94.55v11.94h-49.79V42.18h48.6v11.94h-33.81v13.96h29.86v11.58h-29.86v14.88h35ZM658.27,41.08c-20.31,0-35.19,14.15-35.19,33.26s14.88,33.26,35.19,33.26,35.19-14.15,35.19-33.26-14.88-33.26-35.19-33.26ZM658.27,94.92c-11.48,0-20.12-8.36-20.12-20.58s8.64-20.58,20.12-20.58,20.12,8.36,20.12,20.58-8.64,20.58-20.12,20.58ZM733.45,42.17v35.46c0,12.22-5.33,17.27-14.33,17.27s-14.33-5.05-14.33-17.27v-35.46h-14.88v36.01c0,18.93,10.84,29.4,29.12,29.4s29.12-10.47,29.12-29.4v-36.01h-14.7ZM790.19,54.31h-20.58v-12.13h56.04v12.13h-20.58v52.18h-14.88v-52.18Z"/></g></svg>
+  </div>
+  <p class="footer-tagline">Transformando dados em resultados para e-commerces.</p>
+  <p class="footer-note">Esta análise é observacional, baseada em dados públicos (camilaboletti.com.br, @camilaboletti no Instagram e Facebook Ad Library). Métricas internas de conversão e dados de backend podem variar. Análise realizada em março de 2026 pela equipe Moove Out.</p>
+</footer>
+
+<script>
+// Nav active state
+const navLinks = document.querySelectorAll('.nav-links a');
+const sections = ['resumo','site','instagram','anuncios','prioridades'].map(id => document.getElementById(id));
+window.addEventListener('scroll', () => {
+  let current = 'resumo';
+  sections.forEach(s => { if(s && window.scrollY >= s.offsetTop - 80) current = s.id; });
+  navLinks.forEach(a => {
+    const active = a.getAttribute('href') === '#' + current;
+    a.classList.toggle('active', active);
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
